@@ -5,4 +5,5 @@ class GameMain{
         Laya.init(600,400);
     }
 }
+
 new GameMain();
