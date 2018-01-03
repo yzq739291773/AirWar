@@ -1,4 +1,5 @@
 class Game{
+    private hero : Role;
     constructor(){
         Laya.init(480, 852, Laya.WebGL);
         var bg:BackGround = new BackGround();
@@ -13,9 +14,13 @@ class Game{
     }
 
     onloaded():void{
-         var hero :Role = new Role();
-         hero.pos(200,500);
-         Laya.stage.addChild(hero);
+         this.hero = new Role();
+         this.hero.pos(200,500);
+         Laya.stage.addChild(this.hero);
+         Laya.stage.on(Laya.Event.MOUSE_MOVE,this, this.onMouseMove);
+    }
+    onMouseMove():void{
+        this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
     }
 }
 

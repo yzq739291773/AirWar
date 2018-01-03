@@ -53,8 +53,8 @@ var Role = /** @class */ (function (_super) {
     };
     Role.prototype.playAction = function (action) {
         this.body.play(0, true, action);
-        // var bound:Laya.Rectangle = this.body.getBounds();
-        // this.body.pos(-bound.width/2,-bound.height/2);
+        var bound = this.body.getBounds();
+        this.body.pos(-bound.width / 2, -bound.height / 2);
     };
     return Role;
 }(Laya.Sprite));

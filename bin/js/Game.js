@@ -11,9 +11,13 @@ var Game = /** @class */ (function () {
         Laya.loader.load(resArray, Laya.Handler.create(this, this.onloaded), null);
     }
     Game.prototype.onloaded = function () {
-        var hero = new Role();
-        hero.pos(200, 500);
-        Laya.stage.addChild(hero);
+        this.hero = new Role();
+        this.hero.pos(200, 500);
+        Laya.stage.addChild(this.hero);
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.onMouseMove);
+    };
+    Game.prototype.onMouseMove = function () {
+        this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
     };
     return Game;
 }());
