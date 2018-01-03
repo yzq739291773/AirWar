@@ -1,5 +1,17 @@
 class Role extends Laya.Sprite {
     private body:Laya.Animation;
+
+     // 角色类型
+    public type :string;
+    // 阵营
+    public camp :number;
+    // 血量
+    public hp :number;
+    // 速度
+    public speed:number;
+    // 被击半径
+    public hitRadius:number;
+    
     constructor(){
         super();
         this.init();
