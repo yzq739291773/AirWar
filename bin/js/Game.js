@@ -88,6 +88,15 @@ var Game = /** @class */ (function () {
                     if (Math.abs(role1.x - role2.x) < hitRadius && Math.abs(role1.y - role2.y) < hitRadius) {
                         this.lostHp(role1, 1);
                         this.lostHp(role2, 1);
+                        // 没掉一滴血 积分+1
+                        this.score++;
+                        // 积分大于升级积分，则升级
+                        if (this.score > this.levelUpScore) {
+                            // 关卡升级
+                            this.level++;
+                            // 提高下一级的升级难度
+                            this.levelUpScore += this.level * 5;
+                        }
                     }
                 }
             }
@@ -97,8 +106,28 @@ var Game = /** @class */ (function () {
             Laya.timer.clear(this, this.onLoop);
         }
         // 每隔30帧创建新的敌机
-        if (Laya.timer.currFrame % 60 === 0) {
-            this.creatEnemey(2);
+        // if(Laya.timer.currFrame % 60 ===0){
+        //     this.creatEnemey(2);
+        // }
+        // 关卡 创建低级的间隔越短
+        var cutTime = this.level < 30 ? this.level * 2 : 60;
+        // 关卡越高，敌机飞行速度越快
+        var speedUp = Math.floor(this.level / 6);
+        // 关卡越高，敌机血量越高
+        var hpUp = Math.floor(this.level / 8);
+        // 关卡越高，敌机数量越多
+        var numUp = Math.floor(this.level / 10);
+        // 创建小飞机
+        if (Laya.timer.currFrame % (80 - cutTime) === 0) {
+            this.creatEnemey(0, 2 + numUp, 3 + speedUp, 1);
+        }
+        // 创建小飞机
+        if (Laya.timer.currFrame % (150 - cutTime) === 0) {
+            this.creatEnemey(1, 1 + numUp, 2 + speedUp, 2 + hpUp * 2);
+        }
+        // 创建小飞机
+        if (Laya.timer.currFrame % (900 - cutTime) === 0) {
+            this.creatEnemey(2, 1, 1 + speedUp, 10 + hpUp * 6);
         }
     };
     Game.prototype.lostHp = function (role, lostHp) {
@@ -152,19 +181,19 @@ var Game = /** @class */ (function () {
     Game.prototype.onMouseMove = function () {
         this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
     };
-    Game.prototype.creatEnemey = function (num) {
+    Game.prototype.creatEnemey = function (type, num, speed, hp) {
         for (var i = 0; i < num; i++) {
             // 随机出现敌人数
-            var r = Math.random();
+            // var r = Math.random();
             // 根据随机数，随机敌人 type：0 小飞机  1 中型飞机  2 大型飞机
-            var type = r < 0.7 ? 0 : r < 0.95 ? 1 : 2;
+            // var type:number = r< 0.7 ? 0 : r< 0.95 ? 1 : 2;
             // 创建敌人
             // var enemy :Role = new Role();
             // 从对象池里面创建对象，性能更好
             // 参数1：标识符  参数2：类型
             var enemy = Laya.Pool.getItemByClass("role", Role);
             // 初始化角色
-            enemy.init("enemy" + (type + 1), 1, this.hps[type], this.speeds[type], this.radius[type]);
+            enemy.init("enemy" + (type + 1), 1, hp, speed, this.radius[type]);
             // 随机位置
             enemy.pos(Math.random() * 400 + 40, Math.random() * 200);
             // 添加到舞台上
