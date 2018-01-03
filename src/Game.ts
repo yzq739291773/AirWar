@@ -20,10 +20,14 @@ class Game{
     // 子弹级别
     private bulletLevel:number = 0;
 
+    //游戏角色容器
+    private roleBox:Laya.Sprite;
+    //游戏UI界面
+    private gameInfo:GameInfo;
+
     constructor(){
         Laya.init(480, 852, Laya.WebGL);
-        var bg:BackGround = new BackGround();
-        Laya.stage.addChild(bg);
+        
         // 预加载图集资源
         var resArray:Array<any> = [
             {url:"res/atlas/war.atlas", type:Laya.Loader.ATLAS},
@@ -34,6 +38,19 @@ class Game{
     }
 
     onloaded():void{
+        var bg:BackGround = new BackGround();
+        Laya.stage.addChild(bg);
+
+        //实例化角色容器
+        this.roleBox = new Laya.Sprite();
+        //添加到舞台上
+        Laya.stage.addChild(this.roleBox);
+
+        //创建游戏UI界面
+        this.gameInfo = new GameInfo();
+        //添加到舞台上
+        Laya.stage.addChild(this.gameInfo);
+        
          this.hero = new Role();
          this.hero.init("hero",0,1,0,30);
          this.hero.shootType = 1;

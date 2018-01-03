@@ -18,8 +18,6 @@ var Game = /** @class */ (function () {
         // 子弹级别
         this.bulletLevel = 0;
         Laya.init(480, 852, Laya.WebGL);
-        var bg = new BackGround();
-        Laya.stage.addChild(bg);
         // 预加载图集资源
         var resArray = [
             { url: "res/atlas/war.atlas", type: Laya.Loader.ATLAS },
@@ -28,6 +26,16 @@ var Game = /** @class */ (function () {
         Laya.loader.load(resArray, Laya.Handler.create(this, this.onloaded), null);
     }
     Game.prototype.onloaded = function () {
+        var bg = new BackGround();
+        Laya.stage.addChild(bg);
+        //实例化角色容器
+        this.roleBox = new Laya.Sprite();
+        //添加到舞台上
+        Laya.stage.addChild(this.roleBox);
+        //创建游戏UI界面
+        this.gameInfo = new GameInfo();
+        //添加到舞台上
+        Laya.stage.addChild(this.gameInfo);
         this.hero = new Role();
         this.hero.init("hero", 0, 1, 0, 30);
         this.hero.shootType = 1;
@@ -180,9 +188,17 @@ var Game = /** @class */ (function () {
     };
     // 恢复
     Game.prototype.resume = function () {
+        //创建游戏主循环
+        Laya.timer.frameLoop(1, this, this.onLoop);
+        //监听舞台的鼠标移动事件
+        Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.onMouseMove);
     };
     // 暂停
     Game.prototype.pause = function () {
+        //停止游戏主循环
+        Laya.timer.clear(this, this.onLoop);
+        //移除舞台的鼠标移动事件
+        Laya.stage.off(Laya.Event.MOUSE_MOVE, this, this.onMouseMove);
     };
     Game.prototype.onMouseMove = function () {
         this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
