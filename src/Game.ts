@@ -9,6 +9,17 @@ class Game{
     // 敌机被击半径
     private radius: Array<any> = [15,30,70];
 
+     // 子弹发射的偏移位置
+    private bulletPos : Array<Array<number>> = [[0],[-15,15],[-30,0,30],[-45,-15,15,45]];
+    // 关卡等级
+    private level:number = 0;
+    // 积分成绩
+    private score:number = 0;
+    // 升级等级所需成绩数量
+    private levelUpScore:number = 0;
+    // 子弹级别
+    private bulletLevel:number = 0;
+
     constructor(){
         Laya.init(480, 852, Laya.WebGL);
         var bg:BackGround = new BackGround();

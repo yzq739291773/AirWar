@@ -25,18 +25,21 @@ class Role extends Laya.Sprite {
     public action:string = "";
     // 是否是子弹
     public isBullet:boolean = false;
+    // 0 普通， 1 子弹 2炸药 3 补给品
+    public heroType:number = 0;
 
     constructor(){
         super();
         // this.init();
     }
     // 初始化操作是有类的外部调用并初始化的，因此改为public，并屏蔽构造函中的初始化init操作
-    public init(_type:string, _camp:number, _hp:number, _speed:number, _hitRadius:number):void{
+    public init(_type:string, _camp:number, _hp:number, _speed:number, _hitRadius:number, _heroType = 0):void{
             this.type = _type;
             this.camp = _camp;
             this.hp = _hp;
             this.speed = _speed;
             this.hitRadius = _hitRadius;
+            this.heroType = _heroType;
             if(!Role.cached){
                 Role.cached = true;
                 //缓存飞行动画
