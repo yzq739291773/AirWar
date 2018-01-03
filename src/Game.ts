@@ -16,7 +16,7 @@ class Game{
     // 积分成绩
     private score:number = 0;
     // 升级等级所需成绩数量
-    private levelUpScore:number = 0;
+    private levelUpScore:number = 10;
     // 子弹级别
     private bulletLevel:number = 0;
 
@@ -52,18 +52,47 @@ class Game{
         Laya.stage.addChild(this.gameInfo);
 
          this.hero = new Role();
-         this.hero.init("hero",0,1,0,30);
-         this.hero.shootType = 1;
-         this.hero.pos(200,500);
+        //  this.hero.init("hero",0,1,0,30);
+        //  this.hero.shootType = 1;
+        //  this.hero.pos(200,500);
          this.roleBox.addChild(this.hero);
-         Laya.stage.on(Laya.Event.MOUSE_MOVE,this, this.onMouseMove);
+        //  Laya.stage.on(Laya.Event.MOUSE_MOVE,this, this.onMouseMove);
         //  this.creatEnemey(10);
         // 手动创建敌人改为定时创建敌人
-        Laya.timer.frameLoop(1, this, this.onLoop);
+        // Laya.timer.frameLoop(1, this, this.onLoop);
         this.restart();
     }
     restart():void{
-        
+        //重置游戏数据
+        this.score = 0;
+        this.level = 0;
+        this.levelUpScore = 10;
+        this.bulletLevel = 0;
+        this.gameInfo.reset();
+
+        //初始化角色
+        this.hero.init("hero",0,5,0,30);
+        //设置射击类型
+        this.hero.shootType = 1;
+        //设置角色位置
+        this.hero.pos(200,500);
+
+        //重置射击间隔
+        this.hero.shootInterval = 500;
+        //显示角色
+        this.hero.visible = true;
+
+        for(var i:number = this.roleBox.numChildren-1;i>-1;i--){
+            var role:Role = this.roleBox.getChildAt(i) as Role;
+            if(role != this.hero){
+                role.removeSelf();
+                //回收之前重置的信息
+                role.visible = true;
+                //回收到对象池
+                Laya.Pool.recover("role",role);
+            }
+        }
+        this.resume();
     }
     onLoop():void{
          // 遍历舞台上所有的飞机，更改飞机的状态
