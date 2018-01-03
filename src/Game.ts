@@ -188,11 +188,17 @@ class Game{
     }
     // 恢复
     resume():void{
-
+        //创建游戏主循环
+        Laya.timer.frameLoop(1,this,this.onLoop);
+        //监听舞台的鼠标移动事件
+        Laya.stage.on(Laya.Event.MOUSE_MOVE,this,this.onMouseMove);
     }
     // 暂停
     pause():void{
-
+        //停止游戏主循环
+        Laya.timer.clear(this,this.onLoop);
+        //移除舞台的鼠标移动事件
+        Laya.stage.off(Laya.Event.MOUSE_MOVE,this,this.onMouseMove);
     }
     onMouseMove():void{
         this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
