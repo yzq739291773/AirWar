@@ -97,6 +97,15 @@ class Game{
                     if(Math.abs(role1.x -role2.x)<hitRadius && Math.abs(role1.y -role2.y)<hitRadius){
                         this.lostHp(role1, 1);
                         this.lostHp(role2, 1);
+                        // 没掉一滴血 积分+1
+                        this.score ++;
+                        // 积分大于升级积分，则升级
+                        if(this.score > this.levelUpScore){
+                            // 关卡升级
+                            this.level ++;
+                            // 提高下一级的升级难度
+                            this.levelUpScore += this.level*5;
+                        }
                     }
                 }
             }
