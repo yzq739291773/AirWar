@@ -12,7 +12,7 @@ var Role = /** @class */ (function (_super) {
     __extends(Role, _super);
     function Role() {
         var _this = _super.call(this) || this;
-        // 射击类型
+        // 射击类型 (几路子弹)
         _this.shootType = 0;
         // 射击间隔
         _this.shootInterval = 400;
@@ -71,7 +71,7 @@ var Role = /** @class */ (function (_super) {
             this.addChild(this.body);
             this.body.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
         }
-        this.playAction("down");
+        this.playAction("fly");
     };
     Role.prototype.onPlayComplete = function () {
         if (this.action === "down") {

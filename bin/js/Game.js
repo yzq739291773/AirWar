@@ -20,6 +20,7 @@ var Game = /** @class */ (function () {
     Game.prototype.onloaded = function () {
         this.hero = new Role();
         this.hero.init("hero", 0, 1, 0, 30);
+        this.hero.shootType = 1;
         this.hero.pos(200, 500);
         Laya.stage.addChild(this.hero);
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.onMouseMove);
@@ -31,15 +32,30 @@ var Game = /** @class */ (function () {
         // 遍历舞台上所有的飞机，更改飞机的状态
         for (var i = Laya.stage.numChildren - 1; i > 0; i--) {
             var role = Laya.stage.getChildAt(i);
+            // 敌机移动
             if (role && role.speed) {
                 // 根据飞机的速度改变位置
                 role.y += role.speed;
                 // 如果敌机移动到显示区域外则移除
-                if (role.y > 1000) {
+                if (role.y > 1000 || !role.visible || (role.isBullet && role.y < -20)) {
                     // 从舞台移除
                     role.removeSelf();
+                    role.isBullet = false;
+                    role.visible = true;
                     // 回收到对象池
                     Laya.Pool.recover("role", role);
+                }
+            }
+            // 处理子弹发射逻辑
+            if (role.shootType > 0) {
+                var time = Laya.Browser.now();
+                if (time > role.shootTime) {
+                    role.shootTime = time + role.shootInterval;
+                    var bullet = Laya.Pool.getItemByClass("role", Role);
+                    bullet.init("bullet1", role.camp, 1, -5, 1);
+                    bullet.isBullet = true;
+                    bullet.pos(role.x, role.y - role.hitRadius - 10);
+                    Laya.stage.addChild(bullet);
                 }
             }
         }

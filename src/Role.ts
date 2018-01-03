@@ -15,7 +15,7 @@ class Role extends Laya.Sprite {
     // 被击半径
     public hitRadius:number;
 
-    // 射击类型
+    // 射击类型 (几路子弹)
     public shootType:number = 0;
     // 射击间隔
     public shootInterval = 400;
