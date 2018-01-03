@@ -186,6 +186,14 @@ class Game{
             }
         }
     }
+    // 恢复
+    resume():void{
+
+    }
+    // 暂停
+    pause():void{
+
+    }
     onMouseMove():void{
         this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
     }

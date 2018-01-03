@@ -178,6 +178,12 @@ var Game = /** @class */ (function () {
             }
         }
     };
+    // 恢复
+    Game.prototype.resume = function () {
+    };
+    // 暂停
+    Game.prototype.pause = function () {
+    };
     Game.prototype.onMouseMove = function () {
         this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
     };
@@ -202,5 +208,5 @@ var Game = /** @class */ (function () {
     };
     return Game;
 }());
-new Game();
+var gameInstance = new Game();
 //# sourceMappingURL=Game.js.map
