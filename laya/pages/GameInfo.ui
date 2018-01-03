@@ -15,7 +15,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":108,"x":24,"var":"hpLabel","text":"HP:5","styleSkin":"war/label.png","fontSize":24,"color":"#9caf12","align":"center"},
+            "props":{"y":17,"x":24,"var":"hpLabel","text":"HP:5","styleSkin":"war/label.png","fontSize":24,"color":"#9caf12","bgColor":"#f3e11d","align":"center"},
             "nodeParent":1,
             "label":"Label(hpLabel)",
             "isDirectory":false,
@@ -28,7 +28,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":108,"x":133,"var":"levelLabel","text":"Level:0","styleSkin":"war/label.png","fontSize":24,"color":"#85c821","align":"center"},
+            "props":{"y":17,"x":133,"var":"levelLabel","text":"Level:0","styleSkin":"war/label.png","fontSize":24,"color":"#85c821","bgColor":"#1ceab9","align":"center"},
             "nodeParent":1,
             "label":"Label(levelLabel)",
             "isDirectory":false,
@@ -41,7 +41,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":108,"x":266,"var":"scoreLabel","text":"Sore:0","styleSkin":"war/label.png","fontSize":24,"color":"#93d10f","align":"center"},
+            "props":{"y":17,"x":266,"var":"scoreLabel","text":"Sore:0","styleSkin":"war/label.png","fontSize":24,"color":"#93d10f","bgColor":"#a5c095","align":"center"},
             "nodeParent":1,
             "label":"Label(scoreLabel)",
             "isDirectory":false,
@@ -54,7 +54,7 @@
         {
             "x":15,
             "type":"Button",
-            "props":{"y":108,"x":392,"var":"pauseBtn","stateNum":"2","skin":"war/btn_pause.png"},
+            "props":{"y":17,"x":392,"var":"pauseBtn","stateNum":"2","skin":"war/btn_pause.png"},
             "nodeParent":1,
             "label":"Button(pauseBtn)",
             "isDirectory":false,
@@ -67,7 +67,7 @@
         {
             "x":15,
             "type":"Label",
-            "props":{"y":441,"x":170,"var":"infoLabel","text":"游戏结束","styleSkin":"war/label.png","fontSize":30,"color":"#9fb215","align":"center"},
+            "props":{"y":441,"x":111,"wordWrap":true,"width":257,"var":"infoLabel","text":"游戏结束","styleSkin":"war/label.png","height":60,"fontSize":30,"color":"#9fb215","align":"center"},
             "nodeParent":1,
             "label":"Label(infoLabel)",
             "isDirectory":false,

@@ -119,6 +119,7 @@ var Game = /** @class */ (function () {
             var role1 = this.roleBox.getChildAt(i);
             if (role1.hp < 1)
                 continue;
+            // 注意这里更改容器后都要改为-1.否则会英雄撞不死
             for (var j = i - 1; j > -1; j--) {
                 if (!role.visible)
                     continue;
