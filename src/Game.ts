@@ -43,6 +43,7 @@ class Game{
                 if(role.y>1000){
                     // 从舞台移除
                     role.removeSelf();
+                    
                     // 回收到对象池
                     Laya.Pool.recover("role", role);
                 }
