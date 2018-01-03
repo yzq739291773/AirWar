@@ -60,6 +60,10 @@ class Game{
         //  this.creatEnemey(10);
         // 手动创建敌人改为定时创建敌人
         Laya.timer.frameLoop(1, this, this.onLoop);
+        this.restart();
+    }
+    restart():void{
+        
     }
     onLoop():void{
          // 遍历舞台上所有的飞机，更改飞机的状态
@@ -118,10 +122,12 @@ class Game{
                         this.lostHp(role2, 1);
                         // 没掉一滴血 积分+1
                         this.score ++;
+                        this.gameInfo.score(this.score);
                         // 积分大于升级积分，则升级
                         if(this.score > this.levelUpScore){
                             // 关卡升级
                             this.level ++;
+                            this.gameInfo.level(this.level);
                             // 提高下一级的升级难度
                             this.levelUpScore += this.level*5;
                         }
@@ -132,6 +138,9 @@ class Game{
         // 如果主角死亡，则停止游戏循环
         if(this.hero.hp<1){
             Laya.timer.clear(this, this.onLoop);
+            this.gameInfo.infoLabel.text="GameOver, 分数："+ this.score + "\n点击这里重新开始游戏";
+            //注册舞台点击事件，点击重新开始游戏
+            this.gameInfo.infoLabel.once(Laya.Event.CLICK,this,this.restart);
         }
         // 每隔30帧创建新的敌机
         // if(Laya.timer.currFrame % 60 ===0){
@@ -178,7 +187,7 @@ class Game{
             //每吃一个血瓶，血量增加1
             this.hero.hp++;
             //设置主角血量
-            // this.gameInfo.hp(this.hero.hp);
+            this.gameInfo.hp(this.hero.hp);
             //设置最大血量不超过10
             if(this.hero.hp > 10) this.hero.hp = 10;
             //隐藏道具
@@ -203,6 +212,10 @@ class Game{
                    this.roleBox.addChild(item);
                 }
             }
+        }
+        //设置主角的血量值
+        if(role == this.hero){
+            this.gameInfo.hp(role.hp);
         }
     }
     // 恢复
