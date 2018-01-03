@@ -210,4 +210,4 @@ class Game{
     }
 }
 
-new Game();
+var gameInstance : Game =  new Game();
