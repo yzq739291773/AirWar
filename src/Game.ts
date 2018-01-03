@@ -69,12 +69,18 @@ class Game{
                 var time:number = Laya.Browser.now();
                 if(time>role.shootTime){
                     role.shootTime = time + role.shootInterval;
-                    var bullet:Role = Laya.Pool.getItemByClass("role", Role);
-                    bullet.init("bullet1", role.camp, 1, -5, 1);
-                    // console.log(role.camp);  这里的role.camp估计是默认为0，因为是数值类型
-                    bullet.isBullet = true;
-                    bullet.pos(role.x, role.y-role.hitRadius-10);
-                    Laya.stage.addChild(bullet);
+
+                    // 根据不同子弹类型，设置不同的数量及位置
+                    var pos:Array<number> = this.bulletPos[role.shootType -1];
+                    for(var index:number =0; index < pos.length; index++){
+                        var bullet:Role = Laya.Pool.getItemByClass("role", Role);
+                        bullet.init("bullet1", role.camp, 1, -4-role.shootType- Math.floor(this.level/15),1, 1);
+                        // console.log(role.camp);  这里的role.camp估计是默认为0，因为是数值类型
+                        // bullet.isBullet = true;
+                        bullet.pos(role.x + pos[index], role.y-role.hitRadius-10);
+                        Laya.stage.addChild(bullet);
+                    }
+                    
                 }
             }
             
