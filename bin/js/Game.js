@@ -23,7 +23,30 @@ var Game = /** @class */ (function () {
         this.hero.pos(200, 500);
         Laya.stage.addChild(this.hero);
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.onMouseMove);
-        this.creatEnemey(10);
+        //  this.creatEnemey(10);
+        // 手动创建敌人改为定时创建敌人
+        Laya.timer.frameLoop(1, this, this.onLoop);
+    };
+    Game.prototype.onLoop = function () {
+        // 遍历舞台上所有的飞机，更改飞机的状态
+        for (var i = Laya.stage.numChildren - 1; i > 0; i--) {
+            var role = Laya.stage.getChildAt(i);
+            if (role && role.speed) {
+                // 根据飞机的速度改变位置
+                role.y += role.speed;
+                // 如果敌机移动到显示区域外则移除
+                if (role.y > 1000) {
+                    // 从舞台移除
+                    role.removeSelf();
+                    // 回收到对象池
+                    Laya.Pool.recover("role", role);
+                }
+            }
+        }
+        // 每隔30帧创建新的敌机
+        if (Laya.timer.currFrame % 60 === 0) {
+            this.creatEnemey(2);
+        }
     };
     Game.prototype.onMouseMove = function () {
         this.hero.pos(Laya.stage.mouseX, Laya.stage.mouseY);
@@ -35,7 +58,10 @@ var Game = /** @class */ (function () {
             // 根据随机数，随机敌人 type：0 小飞机  1 中型飞机  2 大型飞机
             var type = r < 0.7 ? 0 : r < 0.95 ? 1 : 2;
             // 创建敌人
-            var enemy = new Role();
+            // var enemy :Role = new Role();
+            // 从对象池里面创建对象，性能更好
+            // 参数1：标识符  参数2：类型
+            var enemy = Laya.Pool.getItemByClass("role", Role);
             // 初始化角色
             enemy.init("enemy" + (type + 1), 1, this.hps[type], this.speeds[type], this.radius[type]);
             // 随机位置
