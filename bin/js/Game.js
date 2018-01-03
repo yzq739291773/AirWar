@@ -119,7 +119,7 @@ var Game = /** @class */ (function () {
             var role1 = this.roleBox.getChildAt(i);
             if (role1.hp < 1)
                 continue;
-            for (var j = i - 1; j > 0; j--) {
+            for (var j = i - 1; j > -1; j--) {
                 if (!role.visible)
                     continue;
                 var role2 = this.roleBox.getChildAt(j);

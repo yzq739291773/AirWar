@@ -141,7 +141,8 @@ class Game{
         for(var i:number = this.roleBox.numChildren-1; i>-1; i--){
             var role1:Role = this.roleBox.getChildAt(i) as Role;
             if(role1.hp<1)continue;
-            for(var j:number = i-1; j>0; j--){
+            // 注意这里更改容器后都要改为-1.否则会英雄撞不死
+            for(var j:number = i-1; j>-1; j--){
                 if(!role.visible)continue;
                 var role2 :Role = this.roleBox.getChildAt(j) as Role;
                 if(role2.hp>0 && role1.camp != role2.camp){
