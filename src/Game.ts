@@ -60,6 +60,7 @@ class Game{
                     role.shootTime = time + role.shootInterval;
                     var bullet:Role = Laya.Pool.getItemByClass("role", Role);
                     bullet.init("bullet1", role.camp, 1, -5, 1);
+                    // console.log(role.camp);  这里的role.camp估计是默认为0，因为是数值类型
                     bullet.isBullet = true;
                     bullet.pos(role.x, role.y-role.hitRadius-10);
                     Laya.stage.addChild(bullet);
@@ -67,9 +68,41 @@ class Game{
             }
             
         }
+        // 检测碰撞
+        for(var i:number = Laya.stage.numChildren-1; i>0; i--){
+            var role1:Role = Laya.stage.getChildAt(i) as Role;
+            if(role1.hp<1)continue;
+            for(var j:number = i-1; j>0; j--){
+                if(!role.visible)continue;
+                var role2 :Role = Laya.stage.getChildAt(j) as Role;
+                if(role2.hp>0 && role1.camp != role2.camp){
+                    var hitRadius:number = role1.hitRadius + role2.hitRadius;
+                    if(Math.abs(role1.x -role2.x)<hitRadius && Math.abs(role1.y -role2.y)<hitRadius){
+                        this.lostHp(role1, 1);
+                        this.lostHp(role2, 1);
+                    }
+                }
+            }
+        }
+        // 如果主角死亡，则停止游戏循环
+        if(this.hero.hp<1){
+            Laya.timer.clear(this, this.onLoop);
+        }
         // 每隔30帧创建新的敌机
         if(Laya.timer.currFrame % 60 ===0){
             this.creatEnemey(2);
+        }
+    }
+    lostHp(role:Role, lostHp:number):void{
+        role.hp -= lostHp;
+        if(role.hp>0){
+            role.playAction("hit");
+        }else{
+            if(role.isBullet){
+                role.visible = false;
+            }else{
+                role.playAction("down");
+            }
         }
     }
     onMouseMove():void{
