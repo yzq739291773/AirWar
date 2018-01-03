@@ -7,6 +7,16 @@ var Game = /** @class */ (function () {
         this.speeds = [3, 2, 1];
         // 敌机被击半径
         this.radius = [15, 30, 70];
+        // 子弹发射的偏移位置
+        this.bulletPos = [[0], [-15, 15], [-30, 0, 30], [-45, -15, 15, 45]];
+        // 关卡等级
+        this.level = 0;
+        // 积分成绩
+        this.score = 0;
+        // 升级等级所需成绩数量
+        this.levelUpScore = 0;
+        // 子弹级别
+        this.bulletLevel = 0;
         Laya.init(480, 852, Laya.WebGL);
         var bg = new BackGround();
         Laya.stage.addChild(bg);
@@ -51,12 +61,16 @@ var Game = /** @class */ (function () {
                 var time = Laya.Browser.now();
                 if (time > role.shootTime) {
                     role.shootTime = time + role.shootInterval;
-                    var bullet = Laya.Pool.getItemByClass("role", Role);
-                    bullet.init("bullet1", role.camp, 1, -5, 1);
-                    // console.log(role.camp);  这里的role.camp估计是默认为0，因为是数值类型
-                    bullet.isBullet = true;
-                    bullet.pos(role.x, role.y - role.hitRadius - 10);
-                    Laya.stage.addChild(bullet);
+                    // 根据不同子弹类型，设置不同的数量及位置
+                    var pos = this.bulletPos[role.shootType - 1];
+                    for (var index = 0; index < pos.length; index++) {
+                        var bullet = Laya.Pool.getItemByClass("role", Role);
+                        bullet.init("bullet1", role.camp, 1, -4 - role.shootType - Math.floor(this.level / 15), 1, 1);
+                        // console.log(role.camp);  这里的role.camp估计是默认为0，因为是数值类型
+                        // bullet.isBullet = true;
+                        bullet.pos(role.x + pos[index], role.y - role.hitRadius - 10);
+                        Laya.stage.addChild(bullet);
+                    }
                 }
             }
         }
@@ -89,7 +103,32 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.lostHp = function (role, lostHp) {
         role.hp -= lostHp;
-        if (role.hp > 0) {
+        if (role.heroType === 2) {
+            //每次吃一个子弹升级道具，子弹升级+1
+            this.bulletLevel++;
+            //子弹每升2级，子弹数量增加1，最大数量是4
+            this.hero.shootType = Math.min(Math.floor(this.bulletLevel / 2) + 1, 4);
+            //子弹级别越高，发射频率越快
+            this.hero.shootInterval = 500 - 20 * (this.bulletLevel > 20 ? 20 : this.bulletLevel);
+            //隐藏道具
+            role.visible = false;
+            //播放获得道具声音
+            // Laya.SoundManager.playSound("res/sound/achievement.mp3");
+        }
+        else if (role.heroType === 3) {
+            //每吃一个血瓶，血量增加1
+            this.hero.hp++;
+            //设置主角血量
+            // this.gameInfo.hp(this.hero.hp);
+            //设置最大血量不超过10
+            if (this.hero.hp > 10)
+                this.hero.hp = 10;
+            //隐藏道具
+            role.visible = false;
+            //播放获得道具声音
+            // Laya.SoundManager.playSound("res/sound/achievement.mp3");
+        }
+        else if (role.hp > 0) {
             role.playAction("hit");
         }
         else {
@@ -98,6 +137,15 @@ var Game = /** @class */ (function () {
             }
             else {
                 role.playAction("down");
+                // 几种boss的时候掉落血瓶和道具
+                if (role.type === "enemy3") {
+                    // 随机子弹或者升级道具
+                    var type = Math.random() < 0.7 ? 2 : 3;
+                    var item = Laya.Pool.getItemByClass("role", Role);
+                    item.init("ufo" + (type - 1), role.camp, 1, 1, 15, type);
+                    item.pos(role.x, role.y);
+                    Laya.stage.addChild(item);
+                }
             }
         }
     };

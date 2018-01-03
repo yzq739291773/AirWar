@@ -112,13 +112,46 @@ class Game{
     }
     lostHp(role:Role, lostHp:number):void{
         role.hp -= lostHp;
-        if(role.hp>0){
+        if(role.heroType === 2){
+            //每次吃一个子弹升级道具，子弹升级+1
+            this.bulletLevel++;
+            //子弹每升2级，子弹数量增加1，最大数量是4
+            this.hero.shootType = Math.min(Math.floor(this.bulletLevel / 2) + 1,4);
+            //子弹级别越高，发射频率越快
+            this.hero.shootInterval = 500 - 20 * (this.bulletLevel > 20 ? 20 : this.bulletLevel);
+            //隐藏道具
+            role.visible = false;
+            //播放获得道具声音
+            // Laya.SoundManager.playSound("res/sound/achievement.mp3");
+        }
+        else if(role.heroType === 3){
+            //每吃一个血瓶，血量增加1
+            this.hero.hp++;
+            //设置主角血量
+            // this.gameInfo.hp(this.hero.hp);
+            //设置最大血量不超过10
+            if(this.hero.hp > 10) this.hero.hp = 10;
+            //隐藏道具
+            role.visible = false;
+            //播放获得道具声音
+            // Laya.SoundManager.playSound("res/sound/achievement.mp3");
+        }
+        else if(role.hp>0){
             role.playAction("hit");
         }else{
             if(role.isBullet){
                 role.visible = false;
             }else{
                 role.playAction("down");
+                // 几种boss的时候掉落血瓶和道具
+                if(role.type === "enemy3"){
+                    // 随机子弹或者升级道具
+                    var type:number = Math.random() < 0.7 ? 2:3;
+                    var item:Role = Laya.Pool.getItemByClass("role",Role);
+                    item.init("ufo"+(type-1), role.camp, 1, 1, 15, type);
+                    item.pos(role.x, role.y);
+                    Laya.stage.addChild(item);
+                }
             }
         }
     }

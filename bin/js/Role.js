@@ -22,16 +22,20 @@ var Role = /** @class */ (function (_super) {
         _this.action = "";
         // 是否是子弹
         _this.isBullet = false;
+        // 0 普通， 1 子弹 2炸药 3 补给品
+        _this.heroType = 0;
         return _this;
         // this.init();
     }
     // 初始化操作是有类的外部调用并初始化的，因此改为public，并屏蔽构造函中的初始化init操作
-    Role.prototype.init = function (_type, _camp, _hp, _speed, _hitRadius) {
+    Role.prototype.init = function (_type, _camp, _hp, _speed, _hitRadius, _heroType) {
+        if (_heroType === void 0) { _heroType = 0; }
         this.type = _type;
         this.camp = _camp;
         this.hp = _hp;
         this.speed = _speed;
         this.hitRadius = _hitRadius;
+        this.heroType = _heroType;
         if (!Role.cached) {
             Role.cached = true;
             //缓存飞行动画
