@@ -132,6 +132,8 @@ class Game{
                         bullet.pos(role.x + pos[index], role.y-role.hitRadius-10);
                         this.roleBox.addChild(bullet);
                     }
+                    // 添加子弹发射音效
+                    Laya.SoundManager.playSound("res/sound/bullet.mp3")
                     
                 }
             }
@@ -171,6 +173,7 @@ class Game{
             this.gameInfo.infoLabel.text="GameOver, 分数："+ this.score + "\n点击这里重新开始游戏";
             //注册舞台点击事件，点击重新开始游戏
             this.gameInfo.infoLabel.once(Laya.Event.CLICK,this,this.restart);
+            Laya.SoundManager.playSound("res/sound/game_over.mp3");
         }
         // 每隔30帧创建新的敌机
         // if(Laya.timer.currFrame % 60 ===0){
@@ -190,13 +193,14 @@ class Game{
         if(Laya.timer.currFrame % (80 - cutTime) === 0){
             this.creatEnemey(0, 2+numUp, 3+speedUp, 1);
         }
-        // 创建小飞机
+        // 创建中等飞机
         if(Laya.timer.currFrame % (150 - cutTime) === 0){
             this.creatEnemey(1, 1+numUp, 2+speedUp, 2+hpUp *2);
         }
-        // 创建小飞机
+        // 创建BOSS
         if(Laya.timer.currFrame % (900 - cutTime) === 0){
             this.creatEnemey(2, 1, 1+speedUp, 10+hpUp *6);
+            Laya.SoundManager.playSound("res/sound/enemy_out.mp3");
         }
     }
     lostHp(role:Role, lostHp:number):void{
@@ -211,7 +215,7 @@ class Game{
             //隐藏道具
             role.visible = false;
             //播放获得道具声音
-            // Laya.SoundManager.playSound("res/sound/achievement.mp3");
+            Laya.SoundManager.playSound("res/sound/achievement.mp3");
         }
         else if(role.heroType === 3){
             //每吃一个血瓶，血量增加1
@@ -223,7 +227,7 @@ class Game{
             //隐藏道具
             role.visible = false;
             //播放获得道具声音
-            // Laya.SoundManager.playSound("res/sound/achievement.mp3");
+            Laya.SoundManager.playSound("res/sound/achievement.mp3");
         }
         else if(role.hp>0){
             role.playAction("hit");
@@ -231,6 +235,9 @@ class Game{
             if(role.isBullet){
                 role.visible = false;
             }else{
+                if(role.type != 'hero'){
+                    Laya.SoundManager.playSound("res/sound/"+role.type+".mp3");
+                }
                 role.playAction("down");
                 // 几种boss的时候掉落血瓶和道具
                 if(role.type === "enemy3"){
