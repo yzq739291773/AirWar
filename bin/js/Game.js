@@ -40,7 +40,7 @@ var Game = /** @class */ (function () {
         this.hero.init("hero", 0, 1, 0, 30);
         this.hero.shootType = 1;
         this.hero.pos(200, 500);
-        Laya.stage.addChild(this.hero);
+        this.roleBox.addChild(this.hero);
         Laya.stage.on(Laya.Event.MOUSE_MOVE, this, this.onMouseMove);
         //  this.creatEnemey(10);
         // 手动创建敌人改为定时创建敌人
@@ -48,8 +48,10 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.onLoop = function () {
         // 遍历舞台上所有的飞机，更改飞机的状态
-        for (var i = Laya.stage.numChildren - 1; i > 0; i--) {
-            var role = Laya.stage.getChildAt(i);
+        // for(var i:number = Laya.stage.numChildren-1; i>0; i--){
+        // 容器改为roleBox ,不像舞台一样有底图，所以I>-1
+        for (var i = this.roleBox.numChildren - 1; i > -1; i--) {
+            var role = this.roleBox.getChildAt(i);
             // 敌机移动
             if (role && role.speed) {
                 // 根据飞机的速度改变位置
@@ -77,20 +79,20 @@ var Game = /** @class */ (function () {
                         // console.log(role.camp);  这里的role.camp估计是默认为0，因为是数值类型
                         // bullet.isBullet = true;
                         bullet.pos(role.x + pos[index], role.y - role.hitRadius - 10);
-                        Laya.stage.addChild(bullet);
+                        this.roleBox.addChild(bullet);
                     }
                 }
             }
         }
         // 检测碰撞
-        for (var i = Laya.stage.numChildren - 1; i > 0; i--) {
-            var role1 = Laya.stage.getChildAt(i);
+        for (var i = this.roleBox.numChildren - 1; i > -1; i--) {
+            var role1 = this.roleBox.getChildAt(i);
             if (role1.hp < 1)
                 continue;
             for (var j = i - 1; j > 0; j--) {
                 if (!role.visible)
                     continue;
-                var role2 = Laya.stage.getChildAt(j);
+                var role2 = this.roleBox.getChildAt(j);
                 if (role2.hp > 0 && role1.camp != role2.camp) {
                     var hitRadius = role1.hitRadius + role2.hitRadius;
                     if (Math.abs(role1.x - role2.x) < hitRadius && Math.abs(role1.y - role2.y) < hitRadius) {
@@ -181,7 +183,7 @@ var Game = /** @class */ (function () {
                     var item = Laya.Pool.getItemByClass("role", Role);
                     item.init("ufo" + (type - 1), role.camp, 1, 1, 15, type);
                     item.pos(role.x, role.y);
-                    Laya.stage.addChild(item);
+                    this.roleBox.addChild(item);
                 }
             }
         }
@@ -219,7 +221,7 @@ var Game = /** @class */ (function () {
             // 随机位置
             enemy.pos(Math.random() * 400 + 40, Math.random() * 200);
             // 添加到舞台上
-            Laya.stage.addChild(enemy);
+            this.roleBox.addChild(enemy);
         }
     };
     return Game;
