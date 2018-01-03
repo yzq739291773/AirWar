@@ -11,7 +11,18 @@ var __extends = (this && this.__extends) || (function () {
 var Role = /** @class */ (function (_super) {
     __extends(Role, _super);
     function Role() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        // 射击类型
+        _this.shootType = 0;
+        // 射击间隔
+        _this.shootInterval = 400;
+        // 下次射击时间
+        _this.shootTime = Laya.Browser.now() + 2000;
+        // 当前动作
+        _this.action = "";
+        // 是否是子弹
+        _this.isBullet = false;
+        return _this;
         // this.init();
     }
     // 初始化操作是有类的外部调用并初始化的，因此改为public，并屏蔽构造函中的初始化init操作
@@ -54,12 +65,25 @@ var Role = /** @class */ (function (_super) {
             //缓存医疗包
             Laya.Animation.createFrames(["war/ufo2.png"], "ufo2_fly");
         }
-        // 创建body作为动画的载体
-        this.body = new Laya.Animation();
-        this.addChild(this.body);
-        this.playAction("fly");
+        if (!this.body) {
+            // 创建body作为动画的载体
+            this.body = new Laya.Animation();
+            this.addChild(this.body);
+            this.body.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
+        }
+        this.playAction("down");
+    };
+    Role.prototype.onPlayComplete = function () {
+        if (this.action === "down") {
+            this.body.stop();
+            this.visible = false;
+        }
+        else if (this.action === "hit") {
+            this.playAction("fly");
+        }
     };
     Role.prototype.playAction = function (action) {
+        this.action = action;
         this.body.play(0, true, this.type + "_" + action);
         var bound = this.body.getBounds();
         this.body.pos(-bound.width / 2, -bound.height / 2);

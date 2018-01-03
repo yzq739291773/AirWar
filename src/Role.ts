@@ -15,6 +15,17 @@ class Role extends Laya.Sprite {
     // 被击半径
     public hitRadius:number;
 
+    // 射击类型
+    public shootType:number = 0;
+    // 射击间隔
+    public shootInterval = 400;
+    // 下次射击时间
+    public shootTime:number = Laya.Browser.now() + 2000;
+    // 当前动作
+    public action:string = "";
+    // 是否是子弹
+    public isBullet:boolean = false;
+
     constructor(){
         super();
         // this.init();
@@ -65,12 +76,24 @@ class Role extends Laya.Sprite {
                 Laya.Animation.createFrames(["war/ufo2.png"],"ufo2_fly");
             }
 
-            // 创建body作为动画的载体
-            this.body = new Laya.Animation();
-            this.addChild(this.body);
+            if(!this.body){
+                // 创建body作为动画的载体
+                this.body = new Laya.Animation();
+                this.addChild(this.body);
+                this.body.on(Laya.Event.COMPLETE, this, this.onPlayComplete);
+            }
             this.playAction("fly");
     }
+    onPlayComplete():void{
+        if(this.action === "down"){
+            this.body.stop();
+            this.visible = false;
+        }else if (this.action === "hit"){
+            this.playAction("fly");
+        }
+    }
     playAction(action:string):void{
+        this.action = action;
         this.body.play(0,true,this.type+"_"+action);
         var bound:Laya.Rectangle = this.body.getBounds();
         this.body.pos(-bound.width/2,-bound.height/2);
