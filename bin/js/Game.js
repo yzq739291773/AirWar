@@ -18,6 +18,9 @@ var Game = /** @class */ (function () {
         // 子弹级别
         this.bulletLevel = 0;
         Laya.init(480, 852, Laya.WebGL);
+        Laya.stage.scaleMode = "showall";
+        Laya.stage.alignH = "center";
+        Laya.stage.screenMode = "vertical";
         // 预加载图集资源
         var resArray = [
             { url: "res/atlas/war.atlas", type: Laya.Loader.ATLAS },
@@ -123,7 +126,7 @@ var Game = /** @class */ (function () {
                 continue;
             // 注意这里更改容器后都要改为-1.否则会英雄撞不死
             for (var j = i - 1; j > -1; j--) {
-                if (!role.visible)
+                if (!role1.visible)
                     continue;
                 var role2 = this.roleBox.getChildAt(j);
                 if (role2.hp > 0 && role1.camp != role2.camp) {

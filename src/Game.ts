@@ -27,7 +27,9 @@ class Game{
 
     constructor(){
         Laya.init(480, 852, Laya.WebGL);
-        
+        Laya.stage.scaleMode = "showall";
+        Laya.stage.alignH = "center";
+        Laya.stage.screenMode = "vertical";
         // 预加载图集资源
         var resArray:Array<any> = [
             {url:"res/atlas/war.atlas", type:Laya.Loader.ATLAS},
@@ -145,7 +147,7 @@ class Game{
             if(role1.hp<1)continue;
             // 注意这里更改容器后都要改为-1.否则会英雄撞不死
             for(var j:number = i-1; j>-1; j--){
-                if(!role.visible)continue;
+                if(!role1.visible)continue;
                 var role2 :Role = this.roleBox.getChildAt(j) as Role;
                 if(role2.hp>0 && role1.camp != role2.camp){
                     var hitRadius:number = role1.hitRadius + role2.hitRadius;
